@@ -1,6 +1,6 @@
 varying vec3 vNormal;
 varying vec2 vUv;
-varying vec3 vPosition;
+varying vec4 vPosition;
 uniform float uTime;
 
 //	Classic Perlin 3D Noise 
@@ -78,19 +78,15 @@ float cnoise(vec3 P){
   return 2.2 * n_xyz;
 }
 
+float distorted_pos(vec3 p){
+    float n = cnoise(p*4.+vec3(uTime));
+    return n;
+}
 vec3 distortionFunction(vec3 p){
-    vec3 position = p;
-    position.z += sin((position.y+position.x) * 10. + uTime ) * 0.05;
-    position.z += sin(position.y+position.x * 20. + uTime ) * 0.025;
-    position.z += sin((position.y+position.x) * 30. + uTime ) * 0.0125;
-    position.z = cnoise(position) * 0.2;
-    // position.z = -abs(position.z);
-
-    // vec3 position = p+0.1*normal*cnoise(p*4.+ vec3(uTime*0.5));
-    // position+=p+0.05*normal*cnoise(p*8.- vec3(uTime*0.5));
-    // position+=p+0.025*normal*cnoise(p*16.- vec3(uTime*0.5));
+    vec3 position = p+0.1*normal*distorted_pos(p);
     return position;
 }
+
 vec3 orthogonal(vec3 n){
     return normalize(
         abs(n.x) > abs(n.z) ? vec3(-n.y, n.x, 0.) : vec3(0., -n.z, n.y)
@@ -99,6 +95,7 @@ vec3 orthogonal(vec3 n){
 void main(){
     vec3 displacedPosition = distortionFunction(position);
     vec4 modelPosition = modelMatrix * vec4(displacedPosition, 1.);
+
     // vec3 eps = vec3(0.0001, 0., 0.);
     // vec3 neighbour1 = normalize(position + eps.xyy);
     // vec3 neighbour2 = normalize(position + eps.yxy);
@@ -121,7 +118,7 @@ void main(){
     vec4 projectionPosition = projectionMatrix * viewPosition;
     gl_Position = projectionPosition;
 
-    vPosition = (modelMatrix * vec4(displacedPosition, 1.0)).xyz;
+
     vNormal = displacedNormal;
     vUv = uv;
     
