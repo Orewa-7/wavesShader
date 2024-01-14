@@ -12,7 +12,7 @@ float remap(float v, float inMin, float inMax, float outMin, float outMax) {
 }
 
 void main(){
-   vec3 baseColour = vec3(0.5);
+   vec3 baseColour = vec3(0.957,0.502,0.216);
   vec3 lighting = vec3(0.0);
   vec3 normal = normalize(vNormal);
 
@@ -27,7 +27,7 @@ void main(){
   vec3 hemi = mix(groundColour, skyColour, hemiMix);
 
   // Diffuse lighting
-  vec3 lightDir = normalize(vec3(10., 1.0, 1.));
+  vec3 lightDir = normalize(-vec3(-.5, .5, -1.));
   vec3 lightColour = vec3(1.0, 1.0, 1.0);
   float dp = max(0.0, dot(lightDir, normal));
 
@@ -40,6 +40,6 @@ void main(){
   // colour = linearTosRGB(colour);
   colour = pow(colour, vec3(1.0 / 2.2));
 
-  gl_FragColor = vec4(diffuse, 1.0);
+  gl_FragColor = vec4(colour, 1.0);
 
 }

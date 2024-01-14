@@ -83,7 +83,9 @@ vec3 distortionFunction(vec3 p){
     position.z += sin((position.y+position.x) * 10. + uTime ) * 0.05;
     position.z += sin(position.y+position.x * 20. + uTime ) * 0.025;
     position.z += sin((position.y+position.x) * 30. + uTime ) * 0.0125;
-    position.z = cnoise(position) * 0.2;
+    position.z = cnoise(position + uTime * 0.2) * 0.2;
+    position.z += cnoise(position + uTime * 0.4) * 0.1;
+    position.z += cnoise(position + uTime * 0.4) * 0.05;
     // position.z = -abs(position.z);
 
     // vec3 position = p+0.1*normal*cnoise(p*4.+ vec3(uTime*0.5));
@@ -115,6 +117,8 @@ void main(){
     vec3 displacedBitangent = displacedN2 - displacedPosition;
 
     vec3 displacedNormal = normalize(cross(displacedTangent, displacedBitangent));
+
+    // modelPosition.y-=2.5;
     
     vec4 viewPosition = viewMatrix * modelPosition;
 
