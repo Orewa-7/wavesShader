@@ -64,14 +64,14 @@ export function Model({ color }) {
       {/* <Sky /> */}
       {/* <color args={["#151626"]} attach={"background"} /> */}
       <color args={["#c8d3d8"]} attach={"background"} />
-      <fog attach="fog" args={["#c8d3d8", 5, 20]} />
+      {/* <fog attach="fog" args={["#c8d3d8", 5, 20]} /> */}
       <mesh
         ref={waveRef}
         rotation-x={-Math.PI * 0.5}
         position={[0, -0.25, 0]}
         material={material}
       >
-        <planeGeometry args={[20, 20, 526, 526]} />
+        <planeGeometry args={[10, 10, 526, 526]} />
         {/* <waveMaterial /> */}
         {/* <waveMaterial2 fog /> */}
       </mesh>

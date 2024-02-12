@@ -17,8 +17,9 @@ float remap(float v, float inMin, float inMax, float outMin, float outMax) {
 void main(){
    vec3 baseColourLight = vec3(0.,0.208,0.31);
    vec3 baseColourDark = vec3(0.0000, 0.0331, 0.1329);
-   float elevation = remap(vElevation, 0., 0.35, 0., 1.) ;
-   vec3 baseColour = mix(baseColourDark, baseColourLight, elevation);
+  //  float elevation = remap(vElevation, 0., 1., 0., 1.) ;
+  //  vec3 baseColour = mix(baseColourDark, baseColourLight, vElevation);
+   vec3 baseColour = baseColourLight;
   vec3 lighting = vec3(0.0);
   vec3 normal = normalize(vNormal);
    vec3 viewDir = normalize(cameraPosition - vPosition);
@@ -32,9 +33,10 @@ void main(){
 
   float hemiMix = remap(normal.y, -1.0, 1.0, 0.0, 1.0);
   vec3 hemi = mix(groundColour, skyColour, hemiMix);
+  hemi = vec3(0.);
 
   // Diffuse lighting
-  vec3 lightDir = normalize(vec3(1.0, 1., 1.0));
+  vec3 lightDir = normalize(vec3(1., 1., 1.));
   vec3 lightColour = vec3(1.0, 1.0, 1.0);
   float dp = max(0.0, dot(-lightDir, normal));
 
@@ -43,7 +45,7 @@ void main(){
   // Phong specular
   vec3 r = normalize(reflect(-lightDir, normal));
   float phongValue = max(0.0, dot(viewDir, r));
-  phongValue = pow(phongValue, 36.0);
+  phongValue = pow(phongValue, 20.0);
 
   vec3 specular = vec3(phongValue)*vec3(1.,1.,0.9);
 

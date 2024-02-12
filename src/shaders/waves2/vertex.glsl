@@ -16,8 +16,8 @@ float random (vec2 st) {
         43758.5453123);
 }
 
-float SinFunction(float x, float a, float b, float c ){
-    return exp(sin(x*a + uTime*b) * c - 1.) * 0.1;
+float SinFunction(float x, float a, float speed, float c ){
+    return exp(sin(x*a + uTime*speed) * c - 1.14) * 0.1;
 }
 
 float sat(float x){
@@ -33,20 +33,25 @@ vec3 distortionFunction(vec3 p){
     float a = 1.;
     float amplitudeSum = 0.;
     float b = 2.;
-    float octaves = 16.;
+    float octaves = 32.;
+    float speed = 1.5;
+    float seed = 4.;
     for(float i = 0.; i < octaves; ++i){
 
         float dd = i / octaves;
         dd = remap(dd, 0., 1., -1., 1.);
-        vec2 d = vec2(cos(dd * 4.), sin(dd* 4.));
-        position.z += SinFunction(dot(position.xy, d), a, a*0.5 , b);
+        // vec2 d = vec2(cos(dd * 4.), sin(dd* 4.));
+        vec2 d = vec2(cos(seed), sin(seed));
+        position.z += SinFunction(dot(position.xy, d), a, speed , b);
 
         a *=1.18;
         b *=0.82;
-        amplitudeSum += b;
+        speed*= 1.07;
+        amplitudeSum += b/2.;
+        seed+=4.3;
     }
     position.z = position.z / amplitudeSum ;
-    position.z *= 3.;
+    position.z *= 2.;
 
     // position.z = remap(position.z, 0., 0.2, 0., .6);
 
@@ -92,7 +97,7 @@ void main(){
 
     vPosition = (modelMatrix * vec4(displacedPosition, 1.0)).xyz;
     // vNormal = displacedNormal;
-    vNormal = (modelMatrix * vec4(displacedNormal, .0)).xyz;;
+    vNormal = (modelMatrix * vec4(displacedNormal, 0.)).xyz;;
     vUv = uv;
     vElevation =  displacedPosition.z;
     // vElevation =  remap(displacedPosition.z, 0., 0.2, 0., .6);;
